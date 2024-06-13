@@ -1,0 +1,32 @@
+#usda 1.0
+(
+    customLayerData = {
+        string creator = "Reality Composer Pro Version 1.0 (409.100.15)"
+    }
+    defaultPrim = "Root"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Root"
+{
+    reorder nameChildren = ["dragonBallCorto_wav", "dragonballMain_wav", "SoundEmitter"]
+    def RealityKitAudioFile "dragonBallCorto_wav"
+    {
+        uniform asset file = @dragonBallCorto.wav@
+    }
+
+    def RealityKitAudioFile "dragonballMain_wav"
+    {
+        uniform asset file = @dragonballMain.wav@
+    }
+
+    def Xform "SoundEmitter"
+    {
+        def RealityKitComponent "AmbientAudio"
+        {
+            uniform token info:id = "RealityKit.AmbientAudio"
+        }
+    }
+}
+
