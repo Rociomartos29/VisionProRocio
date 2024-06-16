@@ -16,11 +16,14 @@ struct RootView: View {
             VStack{
                 switch(appState.status){
                 case .none:
-                    LoginVIew()
+                    LoginView()
                 case .error(error: let errorString):
                     Text("Error \(errorString)")
                 case .loaded:
-                    "Loaded"
+                    PrincipalView()
+                
+                case .loading:
+                    HerosView(viewModel: HerosViewModel())
                 }
             }
         }

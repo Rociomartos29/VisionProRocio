@@ -10,13 +10,7 @@ import Combine
 
 
 class AppStateViewModel:ObservableObject {
-    enum Status {
-        case none
-        case loading
-        case loaded
-        case error(error: String)
-    }
-
+  
     @Published private(set) var status: Status = .none
     @Published private(set) var isLogged: Bool = false
     @Published private(set) var heroSelected: HerosData?
@@ -53,20 +47,8 @@ class AppStateViewModel:ObservableObject {
         }
     }
 
-    func selectHero(_ hero: HerosData) {
-        heroSelected = hero
+    func setHero(hero: HerosData){
+        self.heroSelected = hero
     }
 
-    func getHeroSelected3DValues() -> (String, String)? {
-        guard let hero = heroSelected else { return nil }
-
-        switch hero.id3DModel {
-        case "Vegeta":
-            return ("/Root/vegeta/Vegatable_wav", "Vegeta.usda")
-        case "Goku":
-            return ("/Root/goku/goku_wav", "goku.usda")
-        default:
-            return nil
-        }
-    }
 }

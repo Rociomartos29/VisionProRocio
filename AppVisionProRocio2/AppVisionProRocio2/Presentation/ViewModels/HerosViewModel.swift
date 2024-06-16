@@ -7,35 +7,43 @@
 
 import Foundation
 
-@Observable
-final class HeroesViewModel {
-    private var heroes: [HerosData]? // Lista de héroes
-    private var heroes3D: [HerosData]?
-    private var status = Status.none
+
+final class HerosViewModel: ObservableObject {
+    @Published private var heroes: [HerosData] = []
+    @Published private var heroes3D: [HerosData] = []
+    @Published private var status: Status = .none 
     
     private let useCase: UseCaseHerosProtocol
     
     init(useCase: UseCaseHerosProtocol = UseCaseHeros()) {
         self.useCase = useCase
-        Task {
-            await fetchHeroes(with: "")
-        }
+        fetchHeroes(with: "")
     }
     
-    func fetchHeroes(with filter: String) async {
-        let result = await useCase.getData(filter: filter)
-        DispatchQueue.main.async {
-            self.heroes = result
-            self.heroes3D = result.filter { !$0.id3DModel.isEmpty }
+    func fetchHeroes(with filter: String) {
+        Task {
+            do {
+                self.status = .loading
+                let result = try await useCase.getData(filter: filter)
+                DispatchQueue.main.async {
+                    self.heroes = result
+                    self.heroes3D = result.filter { !$0.id3DModel.isEmpty }
+                    self.status = .loaded
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self.status = .error(error: error.localizedDescription)
+                }
+            }
         }
     }
     
     // Métodos de acceso público para las propiedades privadas
-    func getHeroes() -> [HerosData]? {
+    func getHeroes() -> [HerosData] {
         return heroes
     }
     
-    func getHeroes3D() -> [HerosData]? {
+    func getHeroes3D() -> [HerosData] {
         return heroes3D
     }
     

@@ -7,7 +7,7 @@
 
 import Foundation
 enum Status {
-    case none, loaded, error(error:String)
+    case none, loading, loaded, error(error:String)
 }
 
 public struct HerosModelResponse: Codable, Identifiable {

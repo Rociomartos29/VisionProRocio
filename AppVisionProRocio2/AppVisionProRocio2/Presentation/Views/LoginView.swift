@@ -13,8 +13,8 @@ import RealityKitContent
 struct LoginView: View {
     @EnvironmentObject private var appStateVM: AppStateViewModel
     
-    @State private var user: String = "bejl@keepcoding.es"
-    @State private var pass: String = "123456"
+    @State private var user: String = ""
+    @State private var pass: String = ""
     
     var body: some View {
         VStack {
@@ -37,7 +37,7 @@ struct LoginView: View {
                             // Campo de texto para el usuario
                             TextField("Usuario", text: $user)
                                 .padding()
-                                .background(Color.white.opacity(0.8))
+                                .background(Color.blue.opacity(0.8))
                                 .cornerRadius(10)
                                 .textInputAutocapitalization(.never)
                                 .autocorrectionDisabled()
@@ -46,7 +46,7 @@ struct LoginView: View {
                             // Campo de texto para la contraseña
                             SecureField("Clave", text: $pass)
                                 .padding()
-                                .background(Color.white.opacity(0.8))
+                                .background(Color.blue.opacity(0.8))
                                 .cornerRadius(10)
                                 .textInputAutocapitalization(.never)
                                 .autocorrectionDisabled()
@@ -57,7 +57,7 @@ struct LoginView: View {
                         // Botón de login
                         Button(action: {
                             Task {
-                                await appStateVM.login(user: self.user, password: self.pass)
+                                 appStateVM.login(user: self.user, password: self.pass)
                             }
                         }) {
                             Text("Login")
@@ -73,26 +73,6 @@ struct LoginView: View {
                         .padding(.top, 20)
                     }
                 )
-            
-            // Vista de RealityKit para cargar sonido
-            RealityView { content in
-                if let scene = try? await Entity(named: "Login", in: realityKitContentBundle) {
-                    guard let soundEmitter = scene.findEntity(named: "SoundEmitter") else {
-                        NSLog("Emitter no encontrado en la escena Login")
-                        return
-                    }
-                    
-                    guard let resourceSound = try? await AudioFileResource(named: "/Root/dragonballMain_wav", from: "Login.usda", in: realityKitContentBundle) else {
-                        NSLog("No encuentra el sonido")
-                        return
-                    }
-                    
-                    let audio = soundEmitter.prepareAudio(resourceSound)
-                    audio.play()
-                    content.add(scene)
-                }
-            }
-            .frame(height: 200)
         }
     }
 }
